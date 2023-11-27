@@ -36,7 +36,7 @@ const ShortenLink = async () => {
             <div className='mt-20'>
                 <div>
                     {links?.map((link, index) => (
-                        <div key={index} className='bg-primary-50 rounded-md p-5 flex'>
+                        <div key={index} className='bg-neutral-50 rounded-md p-5 flex'>
                             {/* details */}
                             <div className='flex-1'>
                                 <div className='flex flex-col gap-2'>
