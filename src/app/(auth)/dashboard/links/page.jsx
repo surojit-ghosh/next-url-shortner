@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import userModel from '@/models/user.js';
 import linkModel from '@/models/link.js';
 import connect from '@/utils/db.js';
-import { format } from "date-fns"
+import { format, parseISO } from "date-fns"
 import Link from 'next/link.js';
 import { Calendar, LineChart } from 'lucide-react';
 import numeral from "numeral";
@@ -17,9 +17,8 @@ const fetchLinks = async () => {
         const user = await userModel.findOne({ email: session.user.email });
         const links = await linkModel.find({ user: user._id });
 
-        return links || [];
+        return JSON.parse(JSON.stringify(links));
     } catch (error) {
-        console.log(error)
         console.log(`Unable to fetch data.`);
     };
 };
@@ -36,12 +35,12 @@ const ShortenLink = async () => {
 
             <div className='mt-20'>
                 <div>
-                    {links.map((link, index) => (
+                    {links?.map((link, index) => (
                         <div key={index} className='bg-primary-50 rounded-md p-5 flex'>
                             {/* details */}
                             <div className='flex-1'>
                                 <div className='flex flex-col gap-2'>
-                                    <Link href={"/dashboard/links"}><h1 className='text-xl font-bold hover:underline duration-300'>{link.title ? link.title : `Untitled ${format(link.createdAt, "yyyy-MM-dd HH:mm:ss")}`}</h1></Link>
+                                    <Link href={"/dashboard/links"}><h1 className='text-xl font-bold hover:underline duration-300'>{link.title ? link.title : `Untitled ${format(parseISO(link.createdAt), "yyyy-MM-dd HH:mm:ss")}`}</h1></Link>
                                     <a className='hover:underline duration-300 text-primary-600 font-semibold' href={`${process.env.NEXT_PUBLIC_URL + "/" + link.slug}`} rel="noreferrer" target="_blank">{`${process.env.NEXT_PUBLIC_URL + "/" + link.slug}`}</a>
                                     <a className='hover:underline duration-300' href={`${link.url}`} rel="noreferrer" target="_blank">{`${link.url}`}</a>
                                 </div>
@@ -50,7 +49,7 @@ const ShortenLink = async () => {
                                 <div className='mt-10 flex gap-6'>
                                     <div className='flex items-center gap-1.5'><LineChart size={18} className='text-neutral-600' /><span className='text-neutral-600 text-sm'>{numeral(link.clicks?.length || 0).format("0a")}</span></div>
 
-                                    <div className='flex items-center gap-1.5'><Calendar size={18} className='text-neutral-600' /><span className='text-neutral-600 text-sm'>{format(link.createdAt, "MMM dd, yyyy")}</span></div>
+                                    <div className='flex items-center gap-1.5'><Calendar size={18} className='text-neutral-600' /><span className='text-neutral-600 text-sm'>{format(parseISO(link.createdAt), "MMM dd, yyyy")}</span></div>
                                 </div>
                             </div>
 
