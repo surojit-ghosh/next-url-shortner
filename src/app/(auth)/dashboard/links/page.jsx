@@ -10,6 +10,8 @@ import { Calendar, LineChart } from 'lucide-react';
 import numeral from "numeral";
 import Tools from '@/components/Tools.jsx';
 
+export const revalidate = 3600;
+
 const fetchLinks = async () => {
     try {
         await connect();
@@ -34,7 +36,7 @@ const ShortenLink = async () => {
             </div>
 
             <div className='mt-20'>
-                <div>
+                <div className='space-y-5'>
                     {links?.map((link, index) => (
                         <div key={index} className='bg-neutral-50 rounded-md p-5 flex'>
                             {/* details */}
